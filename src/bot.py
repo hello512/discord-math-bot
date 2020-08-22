@@ -10,18 +10,20 @@ def extractpoint(msg):
 	   it checks everything to make sure, that the message is valid."""
 	msg = msg.replace("(", "").replace(")", "").replace(" ", "").split(",")
 	msg = list(map(float, msg))
-	print(msg)
 	for p in msg:
 		##	maybe change this in the future so that it also takes vars not just ints
-		if type(p) != "int" and type(p) != "float":
-			return False
+		if type(p).__name__ != "int" and type(p).__name__ != "float":
+			print(type(p))
+			return "invalid type of number"
 	return src.vectormath.Point(msg[0], msg[1], msg[2])
 
 
 def extractline(msg):
 	##	this function extracts the mathematical values send by the user and puts them into a LinearEquation
-	if msg.translate({ord(c): None for c in "1234567890,. "}) != "x=()+r*()":
-		return False
+	print(msg)
+	if msg.translate({ord(c): None for c in "1234567890,. -*"}) != "x=()+r()":
+		print(msg)
+		return "invalid format"
 	msg = msg.translate({ord(c): None for c in "x=()+*() "}).replace("r", ",")
 	msg = list(map(float, msg.split(",")))
 	avector = src.vectormath.Vector(msg[0], msg[1], msg[2])
@@ -44,11 +46,27 @@ EQUATIONS_HEADERS= {
 def analysemsg(msg):#
 	"""this function analyses the message sennd by the user and calls the function
 	   that extracts the actual values of the message"""
+	classes = []
 	msg = msg.split(" ")
-	
-	if msg[1] not in EQUATIONS_HEADERS:
-		return "not found"
-	return EQUATIONS_HEADERS[msg[1]](msg[2])
+	for index, m in enumerate(msg):
+		if index % 2 != 0:
+			if msg[index] not in EQUATIONS_HEADERS:
+				return "not found"
+			classes.append(EQUATIONS_HEADERS[msg[index]](msg[index + 1]))
+
+	##	now comes the code that starts the actual calculations
+	returncontent = []
+	print(classes)
+	for cl in classes:
+		if type(cl).__name__ == "LinearEquation" or type(cl).__name__ == "PlaneEquation":
+			for p in classes:
+				if type(p).__name__ == "Point":
+					if cl.checkpoint(p):
+						returncontent.append(f"{str(p)} `liegt auf` {str(cl)},\n")
+					else:
+						returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)},\n")
+
+	return returncontent
 
 
 
@@ -63,8 +81,8 @@ class MathBot(discord.Client):
 			return
 
 		if message.content.startswith(".math"):
+			bot_message = "result:\n"
 			newmsg = analysemsg(message.content)
-			await message.channel.send(str(newmsg))
-
-			
-
+			for s in newmsg:
+				bot_message = bot_message + str(s) + " "
+			await message.channel.send(bot_message)
