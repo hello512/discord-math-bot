@@ -3,12 +3,12 @@
 	It contains vectors and stuff like this as classes
 """
 
-class point():
+class Point():
 	def __init__(self, x : int = 0, y : int = 0, z : int = 0, pointlist : list = 0):
-		if vectorlist != 0 and len(vectorlist) >= 2:				##	check if vector coordinates are givven in vectorlist or as points
-			self.x = vectorlist[0]
-			self.y = vectorlist[1]
-			self.z = 0 if len(vectorlist) == 2 else vectorlist[2]	##	puts in 0 if the given vektor is 2 dimensional
+		if pointlist != 0 and len(pointlist) >= 2:				##	check if vector coordinates are givven in pointlist or as points
+			self.x = pointlist[0]
+			self.y = pointlist[1]
+			self.z = 0 if len(pointlist) == 2 else pointlist[2]	##	puts in 0 if the given vektor is 2 dimensional
 		else:
 			self.x = x
 			self.y = y
@@ -63,21 +63,21 @@ class LinearEquation():
 	##	this function only works, if all givven points are an int. The only var is r
 	##	this function is used by chekcpoint
 	##	works !
-	def calcfactor(self, Point : tuple):
+	def calcfactor(self, point):
 		r = []
-		for i, (a_value, m_value) in enumerate(zip(self.a, self.m)):
-			r.append((Point[i] - a_value) / m_value)
+		for i, (a_value, m_value, p_value) in enumerate(zip(self.a, self.m, point)):
+			r.append((p_value - a_value) / m_value)
 			if i != 0 and r[i-1] != r[i]:
 				return False
 		return True
 
 	##	returns True if Point is on the Line, False if not
 	##	uses the calcfactor method, to do this
-	def checkpoint(self, point : tuple):
+	def checkpoint(self, point):
 		return self.calcfactor(point)
 
 	def __str__(self):
-		return f"G: x = {str(self.a)} + {str(self.rfactor)} * {str(self.v)}"
+		return f"G: x = {str(self.a)} + {str(self.rfactor)} * {str(self.m)}"
 
 class PlaneEquation():
 	def __init__(self, a : Vector, m : Vector, v : Vector):

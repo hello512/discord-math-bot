@@ -8,5 +8,5 @@ from src.bot import MathBot
 
 if __name__ == "__main__":
 
-	bot = Mathbot()
+	bot = MathBot()
 	bot.run(os.getenv('TestBotToken'))

@@ -1,4 +1,5 @@
 import discord
+import string
 
 ##	my own files
 import src.vectormath
@@ -8,19 +9,34 @@ def extractpoint(msg):
 	"""This function extracts a point from a givven message in the format: (x, y, z)
 	   it checks everything to make sure, that the message is valid."""
 	msg = msg.replace("(", "").replace(")", "").replace(" ", "").split(",")
+	msg = list(map(float, msg))
+	print(msg)
 	for p in msg:
-		if type(p) != "int":
+		##	maybe change this in the future so that it also takes vars not just ints
+		if type(p) != "int" and type(p) != "float":
 			return False
-	return Point(msg[0], msg[1], msg[2])
+	return src.vectormath.Point(msg[0], msg[1], msg[2])
+
 
 def extractline(msg):
+	##	this function extracts the mathematical values send by the user and puts them into a LinearEquation
+	if msg.translate({ord(c): None for c in "1234567890,. "}) != "x=()+r*()":
+		return False
+	msg = msg.translate({ord(c): None for c in "x=()+*() "}).replace("r", ",")
+	msg = list(map(float, msg.split(",")))
+	avector = src.vectormath.Vector(msg[0], msg[1], msg[2])
+	mvector = src.vectormath.Vector(msg[3], msg[4], msg[5])
+	return src.vectormath.LinearEquation(avector, mvector)
 
+
+def extractplane():
+	pass
 
 ##	contains all the headers for the diffrent equations and the funciton names that need to be called.
 EQUATIONS_HEADERS= {
-	"G:" : extractline()
-	"P:" : extractpoint()
-	"E:" : extractplane()
+	"G:" : extractline,
+	"P:" : extractpoint,
+	"E:" : extractplane
 
 }
 
@@ -29,12 +45,10 @@ def analysemsg(msg):#
 	"""this function analyses the message sennd by the user and calls the function
 	   that extracts the actual values of the message"""
 	msg = msg.split(" ")
-	for msgpart in msg:
-		
-	if msg[1] in EQUATIONS_HEADERS:
-		EQUATIONS_HEADERS[msg[1]](msg[2])
-	else:
+	
+	if msg[1] not in EQUATIONS_HEADERS:
 		return "not found"
+	return EQUATIONS_HEADERS[msg[1]](msg[2])
 
 
 
@@ -49,6 +63,8 @@ class MathBot(discord.Client):
 			return
 
 		if message.content.startswith(".math"):
-			analysemsg(message.content)
+			newmsg = analysemsg(message.content)
+			await message.channel.send(str(newmsg))
+
 			
 
