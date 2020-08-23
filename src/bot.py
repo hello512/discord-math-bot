@@ -45,7 +45,6 @@ EQUATION_HEADERS= {
 	"E:" : extractplane,
 	"info" : lambda : MATHBOTINFOEMBED
 	"help" : lambda : MATHBOTINFOEMBED
-
 }
 
 
