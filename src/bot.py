@@ -1,5 +1,5 @@
-import datetime
 import discord
+import logging
 import string
 import time
 
@@ -14,12 +14,11 @@ import src.vectormath
 MATHBOTINFOEMBED = discord.Embed(
 	title = "Discord Mathe Bot Information / Hilfe",
 	description = "Hier findest du alle wichtigen Informationen und Befehle um den Mathe Bot benutzen zu können.",
-	#timestamp = datetime.datetime.fromtimestamp(time.time(), tz = None),
 	url = "",
-	colour =16312092,
+	colour = 16312092,
 	)
 
-MATHBOTINFOEMBED.set_footer(text = "math-bot created by @0x5f_", icon_url = "https://cdn.discordapp.com/embed/avatars/1.png")
+MATHBOTINFOEMBED.set_footer(text = "math-bot created by @0x5F_#3292", icon_url = "https://cdn.discordapp.com/embed/avatars/1.png")
 MATHBOTINFOEMBED.set_author(name = "math-bot", icon_url = "https://cdn.discordapp.com/embed/avatars/1.png" )
 MATHBOTINFOEMBED.add_field(
 	name = "Generell",
@@ -43,9 +42,29 @@ MATHBOTINFOEMBED.add_field(
 	)
 MATHBOTINFOEMBED.add_field(
 	name = "Beispiele:",
-	value = "```.math G: x=(4,-6,-1)+r(1,1,2) P: (5,-5,1)```Output:```(5.0, -5.0, 1.0) liegt auf G: x = (4.0, -6.0, -1.0) + r * (1.0, 1.0, 2.0),```\n\n",
+	value = "```.math G: x=(4,-6,-1)+r(1,1,2) P: (5,-5,1)```Output:```(5.0, -5.0, 1.0) liegt auf G: x = (4.0, -6.0, -1.0) + r * (1.0, 1.0, 2.0)```\n\n",
 	inline = False
 	)
+
+"""
+The general information Embed for the whole server. It contains all the available commands and bots
+and shows how to access their info / help sites.
+"""
+
+GENERALINFOEMBED = discord.Embed(
+	title = "Generelle Informationen",
+	description = "Eine Auflistung aller commands bzw. bots",
+	color = 16312092
+	)
+
+GENERALINFOEMBED.set_footer(text = "math-bot created by @0x5F_#3292", icon_url = "https://cdn.discordapp.com/embed/avatars/1.png")
+GENERALINFOEMBED.set_author(name = "math-bot", icon_url = "https://cdn.discordapp.com/embed/avatars/1.png")
+GENERALINFOEMBED.add_field(
+	name = "mathe-bot",
+	value = "Der mathe bot kann ein paar simple Rechnungen durchführen. Schreibe ``.math info`` um eine Auflistung aller Funktionen dieses bots zu sehen."
+	)
+
+"""Embed end"""
 
 def extractpoint(msg):
 	"""This function extracts a point from a givven message in the format: (x, y, z)
@@ -79,8 +98,6 @@ EQUATION_HEADERS= {
 	"G:" : extractline,
 	"P:" : extractpoint,
 	"E:" : extractplane,
-	#"info" : lambda a = 0: MATHBOTINFOEMBED,
-	#"help" : lambda a = 0: MATHBOTINFOEMBED
 }
 
 def makestring(contentlist):
@@ -98,7 +115,7 @@ def analysemathmsg(msg):#
 	for index, m in enumerate(msg):
 		if index % 2 != 0:
 			if msg[index] not in EQUATION_HEADERS:
-				return MATHBOTINFOEMBED
+				return '❌Run ``.math info`` or ``.math help`` to learn everything about the math bot'
 			try:
 				classes.append(EQUATION_HEADERS[msg[index]](msg[index + 1]))
 			except IndexError:
@@ -130,13 +147,16 @@ class MathBot(discord.Client):
 			return
 
 		if message.channel.name != "bot-commands":
+			##	The bot only runs in this specified channels
 			return
 
 		if message.content.startswith(".math info") or message.content.startswith(".math help"):
+			##	User requested an info sheet about the mathbot
 			await message.channel.send(embed = MATHBOTINFOEMBED)
 			return
 
 		if message.content.startswith(".math"):
+			##	The actual math bot is called
 			botmessage = analysemathmsg(message.content)
 			if type(botmessage).__name__ == "str":
 				await message.channel.send(botmessage)
@@ -145,4 +165,4 @@ class MathBot(discord.Client):
 
 		if message.content.startswith(".?") or message.content.startswith(".help"):
 			##	sends an info embed back to the user
-			return 
+			await message.channel.send(embed = GENERALINFOEMBED)
