@@ -3,6 +3,8 @@
 	It contains vectors and stuff like this as classes
 """
 
+from math import sqrt
+
 ##	calculates the skalar of 2 vectors
 ##	wrote it like this for better readability
 ##	works !
@@ -18,7 +20,14 @@ def crossproduct(vector0, vector1):
 	x = vector0.z * vector1.y - vector0.y * vector1.z
 	y = vector0.x * vector1.z - vector0.z * vector1.x
 	z = vector0.y * vector1.x - vector0.x * vector1.y
-	return vector(x, y, z)
+	return Vector(x, y, z)
+
+
+##	calculates the amount of a vector
+##	used when checking distance between points with the hessesche normalform
+def amount(vector) -> float:
+	return sqrt(sum([x ** 2 for x in vector]))
+
 
 class Point():
 	def __init__(self, x : int = 0, y : int = 0, z : int = 0, pointlist : list = 0):
@@ -64,6 +73,9 @@ class Vector():
 	##	mutliplyes vector with given factor (must be int)
 	def __mul__(self, factor : int):
 		return Vector(self.x * factor, self.y * factor, self.z * factor)
+
+	def __truediv__(self, factor):
+		return Vector(vectorlist = [co / factor for co in self.__iter__()])
 
 	def __iter__(self):
 		return iter([self.x, self.y, self.z])
@@ -150,6 +162,8 @@ class PlaneEquation():
 			if m_value < 0:
 				factor[0] = factor[0] * (-1)
 
+	##	position of point to vector
+
 	##	used by check_point to determin if the point is on the plane
 	##	calculates via the coordinate form
 	def check_on_plane(self, point):
@@ -162,13 +176,26 @@ class PlaneEquation():
 			supposed_result += n_coordinate * a_coordinate * -1
 		return point_side_result == supposed_result * -1
 
-	def get_point_distance(self, point):
-		return
+
+	##	calculates the distance between a point and a plane. Returns the distance
+	##	uses the hessesche normalform to do this. If you don't know what this is, google it!
+	##	this function works!
+	def plane_point_distance(self, point):
+		result = 0
+		n = self.normvector / amount(self.normvector)		##	sets length of n vector to 1
+		for self_co, point_co, n_co in zip(self.a, point, n):
+			result += n_co * (self_co * -1) + n_co * point_co
+		return abs(result)
+		
 
 	def check_point(self, point): 
-		if not self.check_on_plane(point):
-			return self.get_point_distance(point)
-		return True
+		distance = self.plane_point_distance(point)
+			return distance if distance != 0 else True
+
+	##	positon of point to vector end
+
+	##	position of line to plane
+	
 
 	def __iter__(self):
 		return iter([self.a, self.m, self.v])
@@ -182,6 +209,6 @@ class PlaneEquation():
 ## just for development. Needs to be removed afterwards
 if __name__ == "__main__":
 	a = Vector(1, 2, 3)
-	m = vector(4, 5, 6)
+	m = Vector(4, 5, 6)
 	v = Vector(7, 8, 9)
 	pe = PlaneEquation(a, m, v)
