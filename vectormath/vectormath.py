@@ -3,7 +3,8 @@
 	It contains vectors and stuff like this as classes
 """
 
-from math import sqrt
+import math
+
 
 ##	calculates the skalar of 2 vectors
 ##	wrote it like this for better readability
@@ -26,7 +27,22 @@ def crossproduct(vector0, vector1):
 ##	calculates the amount of a vector
 ##	used when checking distance between points with the hessesche normalform
 def amount(vector) -> float:
-	return sqrt(sum([x ** 2 for x in vector]))
+	return math.sqrt(sum([x ** 2 for x in vector]))
+
+##	reutrns angle between two vectors
+##	still needs to be checked!
+def vector_angle(vec0, vec1):
+	try:
+		res = skalar(vec0, vec1) / (amount(vec0) * amount(vec1))
+	except ZeroDivisionError:
+		return 0
+	return math.degrees(math.acos(res))
+
+##	returns the angle between plane and line hitting the plane, when giving the n vector of the plane and the m vector of the line
+##	still needs to be checked!
+def plane_vector_angle(vec0, vec1):
+	res = skalar(vec0, vec1) / (amount(vec0) * amount(vec1))
+	return math.degrees(math.asin(res))
 
 
 class Point():
@@ -75,7 +91,12 @@ class Vector():
 		return Vector(self.x * factor, self.y * factor, self.z * factor)
 
 	def __truediv__(self, factor):
-		return Vector(vectorlist = [co / factor for co in self.__iter__()])
+		##	needs error handling!
+		try:
+			reuslt = Vector(vectorlist = [co / factor for co in self.__iter__()])
+		except ZeroDivisionError:
+			raise ZeroDivisionError
+		return result
 
 	def __iter__(self):
 		return iter([self.x, self.y, self.z])
@@ -190,12 +211,25 @@ class PlaneEquation():
 
 	def check_point(self, point): 
 		distance = self.plane_point_distance(point)
-			return distance if distance != 0 else True
+		return distance if distance != 0 else True
 
 	##	positon of point to vector end
 
 	##	position of line to plane
-	
+	def line_parallel(self, line):
+		return skalar(line.m, self.n) == 0
+
+	def get_intercept_point(self, line):
+		pass
+
+	def check_line(self, line):
+		if line_parallel(line):
+			distance = plane_point_distance(line.a)
+			return "equal" if distance == 0 else ("parallel", distance)
+		else:
+			pass
+
+
 
 	def __iter__(self):
 		return iter([self.a, self.m, self.v])
