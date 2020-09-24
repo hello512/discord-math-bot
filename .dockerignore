@@ -1,0 +1,5 @@
+site-packages
+.gitignore
+.git
+.dockerignore
+tests*
