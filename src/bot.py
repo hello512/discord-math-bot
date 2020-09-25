@@ -2,9 +2,11 @@ import discord
 import logging
 import string
 import time
+import sys
 
 ##	my own files
-import src.vectormath
+sys.path.append("../")
+from discord_math_bot.vectormath import vectormath
 
 
 """The general information embed for the mathbot. Triggered by typing in ".math info" or ".math help".
@@ -75,7 +77,7 @@ def extractpoint(msg):
 		##	maybe change this in the future so that it also takes vars not just ints
 		if type(p).__name__ != "int" and type(p).__name__ != "float":
 			return "invalid type of number"
-	return src.vectormath.Point(msg[0], msg[1], msg[2])
+	return vectormath.Point(msg[0], msg[1], msg[2])
 
 
 def extractline(msg):
@@ -84,9 +86,9 @@ def extractline(msg):
 		return "invalid format"
 	msg = msg.translate({ord(c): None for c in "x=()+*() "}).replace("r", ",")
 	msg = list(map(float, msg.split(",")))
-	avector = src.vectormath.Vector(msg[0], msg[1], msg[2])
-	mvector = src.vectormath.Vector(msg[3], msg[4], msg[5])
-	return src.vectormath.LinearEquation(avector, mvector)
+	avector = vectormath.Vector(msg[0], msg[1], msg[2])
+	mvector = vectormath.Vector(msg[3], msg[4], msg[5])
+	return vectormath.LinearEquation(avector, mvector)
 
 
 def extractplane():
