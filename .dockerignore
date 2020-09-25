@@ -3,3 +3,4 @@ site-packages
 .git
 .dockerignore
 tests*
+README.md
