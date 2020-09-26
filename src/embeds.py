@@ -55,23 +55,19 @@ GENERALINFOEMBED.add_field(
 	)
 
 
+##	Result Embed:
 
+def generate_content(result_list):
+	result_string = ""
+	for result in result_list:
+		result_string = result_string + result
+	return result_string
 
-class ResultEmbed(Embed):
-
-	def __init__(self):
-		self.embed_color = 3780586
-		self.title = "results of your calculation:"
-		self.set_author(name = "math-bot", icon_url = "https://cdn.discordapp.com/embed/avatars/2.png")
-
-	def set_results(self, result = False, results_list = False):
-		if result != False:
-			self.add_field(
-				value = f"{0}{1}"
-				)
-
-	def __str__(self):
-		return "this is a test string"
-
-	def __repr__(self):
-		return self.__str__()
+def make_result_embed(results_list : list):
+	result_embed = Embed(
+	colour = 5877209,
+	description = generate_content(results_list)
+	)
+	#result_embed.set_author(name = "math-bot", icon_url = "https://cdn.discordapp.com/embed/avatars/2.png"),
+	#result_embed.set_footer(text = "math-bot created by @0x5F_#3292")
+	return result_embed
