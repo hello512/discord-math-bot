@@ -7,7 +7,7 @@ import sys
 ##	my own files
 sys.path.append("../")
 from discord_math_bot.vectormath import vectormath
-import embeds
+from src import embeds
 
 
 def extractpoint(msg):
