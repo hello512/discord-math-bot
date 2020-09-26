@@ -46,10 +46,12 @@ EQUATION_HEADERS= {
 
 def makestring(contentlist):
 	##	puts the strings stored in the contentlist into one final string that gets send to the client
+	##	Not used anymore by analysemsg. Now it sends an result embed
 	returnmessage = "result:\n"
 	for elem in contentlist:
 		returnmessage = returnmessage + str(elem) + " "
 	return returnmessage
+
 
 def analysemathmsg(msg):#
 	"""this function analyses the message sennd by the user and calls the function
@@ -73,11 +75,11 @@ def analysemathmsg(msg):#
 			for p in classes:
 				if type(p).__name__ == "Point":
 					if cl.checkpoint(p):
-						returncontent.append(f"{str(p)} `liegt auf` {str(cl)},\n")
+						returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
 					else:
-						returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)},\n")
+						returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
 
-	return makestring(returncontent)
+	return embeds.make_result_embed(returncontent)
 
 
 
@@ -106,6 +108,7 @@ class MathBot(discord.Client):
 				await message.channel.send(botmessage)
 			if type(botmessage).__name__ == "Embed":
 				await message.channel.send(embed = botmessage)
+			print(type(botmessage).__name__)
 
 		if message.content.startswith(".?") or message.content.startswith(".help"):
 			##	sends an info embed back to the user
