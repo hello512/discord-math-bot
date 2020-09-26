@@ -79,6 +79,9 @@ class Vector():
 			self.y = y
 			self.z = z
 
+	#def normalize(self):
+	#	return self.__truediv__(amount(self))
+
 	def __add__(self, factor):
 		return Vector(self.x + factor.x, self.y + factor.y, self.z + factor.z)
 
@@ -130,6 +133,10 @@ class LinearEquation():
 	def checkpoint(self, point):
 		return self.calcfactor(point)
 
+	def calcpoint(factor):
+		## calculates point with givven factor
+		return self.a - self.m * factor
+
 	def __iter__(self):
 		return iter([self.a, self.m])
 
@@ -150,9 +157,18 @@ class PlaneEquation():
 		self.a = a
 		self.rfactor = "r"	##	dont need this
 		self.sfactor = "s"	##	dont need this
+
 		self.normvector = crossproduct(m, v) if not normvector else normvector
 
+		self.param_form_values = self.get_param_values()
 
+
+	def get_param_values(self) -> list:
+		##	calculates all the values needed for the param form
+		##	works
+		value_list = [val for val in self.normvector]
+		value_list.append(sum([a_co * n_co for a_co, n_co in zip(self.a, self.normvector)]))
+		return value_list
 
 	def calcfactors(self, point):
 		##	this calculates the initial values of the factors 
@@ -219,13 +235,18 @@ class PlaneEquation():
 	def line_parallel(self, line):
 		return skalar(line.m, self.n) == 0
 
+	def intercept_point_factor(self, line):
+		##	calculates the factor when the line hits the plane
+		##	used to get the interception point between the plane and the line
+		return
+
 	def get_intercept_point(self, line):
 		pass
 
 	def check_line(self, line):
 		if line_parallel(line):
 			distance = plane_point_distance(line.a)
-			return "equal" if distance == 0 else ("parallel", distance)
+			return ("equal", 0) if distance == 0 else ("parallel", distance)
 		else:
 			pass
 
