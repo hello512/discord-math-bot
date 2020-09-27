@@ -47,7 +47,7 @@ def plane_vector_angle(vec0, vec1):
 
 class Point():
 	def __init__(self, x : int = 0, y : int = 0, z : int = 0, pointlist : list = 0):
-		if pointlist != 0 and len(pointlist) >= 2:				##	check if vector coordinates are givven in pointlist or as points
+		if pointlist != 0 and len(pointlist) >= 2:				##	check if vector coordinates are given in pointlist or as points
 			self.x = pointlist[0]
 			self.y = pointlist[1]
 			self.z = 0 if len(pointlist) == 2 else pointlist[2]	##	puts in 0 if the given vektor is 2 dimensional
@@ -56,7 +56,7 @@ class Point():
 			self.y = y
 			self.z = z
 
-
+	##	build in operations
 
 	def __iter__(self):
 		return iter([self.x, self.y, self.z])
@@ -70,7 +70,7 @@ class Point():
 
 class Vector():
 	def __init__(self, x : int = 0, y : int = 0, z : int = 0, vectorlist : list = 0):
-		if vectorlist != 0 and len(vectorlist) >= 2:				##	check if vector coordinates are givven in vectorlist or as points
+		if vectorlist != 0 and len(vectorlist) >= 2:				##	check if vector coordinates are given in vectorlist or as points
 			self.x = vectorlist[0]
 			self.y = vectorlist[1]
 			self.z = 0 if len(vectorlist) == 2 else vectorlist[2]	##	puts in 0 if the given vektor is 2 dimensional
@@ -81,6 +81,7 @@ class Vector():
 
 	#def normalize(self):
 	#	return self.__truediv__(amount(self))
+	##	build in operations
 
 	def __add__(self, factor):
 		return Vector(self.x + factor.x, self.y + factor.y, self.z + factor.z)
@@ -117,7 +118,7 @@ class LinearEquation():
 		self.m = m
 		self.rfactor = "r"
 
-	##	this function only works, if all givven points are an int. The only var is r
+	##	this function only works, if all given points are an int. The only var is r
 	##	this function is used by chekcpoint
 	##	works !
 	def calcfactor(self, point):
@@ -133,9 +134,11 @@ class LinearEquation():
 	def checkpoint(self, point):
 		return self.calcfactor(point)
 
-	def calcpoint(factor):
-		## calculates point with givven factor
+	def calc_point(self, factor):
+		## calculates point with given factor
 		return self.a - self.m * factor
+
+	##	build in operations
 
 	def __iter__(self):
 		return iter([self.a, self.m])
@@ -160,10 +163,10 @@ class PlaneEquation():
 
 		self.normvector = crossproduct(m, v) if not normvector else normvector
 
-		self.param_form_values = self.get_param_values()
+		self.coo_form_values = self.get_coo_values()
 
 
-	def get_param_values(self) -> list:
+	def get_coo_values(self) -> list:
 		##	calculates all the values needed for the param form
 		##	works
 		value_list = [val for val in self.normvector]
@@ -238,19 +241,25 @@ class PlaneEquation():
 	def intercept_point_factor(self, line):
 		##	calculates the factor when the line hits the plane
 		##	used to get the interception point between the plane and the line
-		return
+		##	needs to be checked and tested
+		dividing_factor, number = 0, 0
+		for a_co, m_co, co_form_val in zip(line.a, line.m, self.coo_form_values):
+			dividing_factor += co_form_val * m_co
+			number += co_form_val * a_co
+		return (self.coo_form_values - number / dividing_factor)
 
 	def get_intercept_point(self, line):
+		factor = self.intercept_point_factor(line)
 		pass
 
 	def check_line(self, line):
-		if line_parallel(line):
-			distance = plane_point_distance(line.a)
+		if self.line_parallel(line):
+			distance = self.plane_point_distance(line.a)
 			return ("equal", 0) if distance == 0 else ("parallel", distance)
 		else:
-			pass
+			return line.calc_point(self.intercept_point_factor(line))
 
-
+	##	build in operations
 
 	def __iter__(self):
 		return iter([self.a, self.m, self.v])
@@ -261,9 +270,3 @@ class PlaneEquation():
 	def __repr__(self):
 		return self.__str__()
 
-## just for development. Needs to be removed afterwards
-if __name__ == "__main__":
-	a = Vector(1, 2, 3)
-	m = Vector(4, 5, 6)
-	v = Vector(7, 8, 9)
-	pe = PlaneEquation(a, m, v)
