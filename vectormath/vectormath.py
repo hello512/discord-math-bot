@@ -96,10 +96,11 @@ class Vector():
 
 	def __truediv__(self, factor):
 		##	needs error handling!
+		##	returns 0 if division by zero
 		try:
-			reuslt = Vector(vectorlist = [co / factor for co in self.__iter__()])
+			result = Vector(vectorlist = [co / factor if co != 0 else 0 for co in self.__iter__()])
 		except ZeroDivisionError:
-			raise ZeroDivisionError
+			raise ZeroDivisionError("your trying to divide by 0!")
 		return result
 
 	def __iter__(self):
@@ -136,7 +137,7 @@ class LinearEquation():
 
 	def calc_point(self, factor):
 		## calculates point with given factor
-		return self.a - self.m * factor
+		return self.a + self.m * factor
 
 	##	build in operations
 
@@ -236,7 +237,7 @@ class PlaneEquation():
 
 	##	position of line to plane
 	def line_parallel(self, line):
-		return skalar(line.m, self.n) == 0
+		return skalar(line.m, self.normvector) == 0
 
 	def intercept_point_factor(self, line):
 		##	calculates the factor when the line hits the plane
@@ -246,7 +247,7 @@ class PlaneEquation():
 		for a_co, m_co, co_form_val in zip(line.a, line.m, self.coo_form_values):
 			dividing_factor += co_form_val * m_co
 			number += co_form_val * a_co
-		return (self.coo_form_values - number / dividing_factor)
+		return (self.coo_form_values[3] - number) / dividing_factor
 
 	def get_intercept_point(self, line):
 		factor = self.intercept_point_factor(line)
