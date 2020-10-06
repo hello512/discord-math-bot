@@ -212,7 +212,7 @@ class PlaneEquation():
 		point_side_result = 0
 		supposed_result = 0
 
-		for n_cooradinate, point_cooradinate, a_coordinate in zip(self.normvectorm, point, self.a):
+		for n_coordinate, point_cooradinate, a_coordinate in zip(self.normvector, point, self.a):
 			point_side_result += n_coordinate * point_cooradinate
 			supposed_result += n_coordinate * a_coordinate * -1
 		return point_side_result == supposed_result * -1
