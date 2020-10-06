@@ -249,6 +249,7 @@ class PlaneEquation():
 			number += co_form_val * a_co
 		return (self.coo_form_values[3] - number) / dividing_factor
 
+	##	not doing anything right now, might be used in later time. Needs to be finished
 	def get_intercept_point(self, line):
 		factor = self.intercept_point_factor(line)
 		pass
