@@ -2,4 +2,4 @@ test_token.dat
 __pycache__
 tests
 test_start.py
-src/bot.py
+messages/bot.py
