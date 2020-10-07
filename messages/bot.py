@@ -1,4 +1,3 @@
-from discord.ext import commands
 import discord
 import logging
 import string
@@ -36,7 +35,7 @@ def extractline(msg):
 
 def extractplane():
 	if msg.translate({ord(c): None for c in "1234567890,. -*"}) != "x=()+r()+s()":
-		return
+		return 
 
 ##	contains all the headers for the diffrent equations and the funciton names that need to be called.
 EQUATION_HEADERS= {
@@ -82,7 +81,7 @@ def analysemathmsg(msg):#
 
 	return embeds.make_result_embed(returncontent)
 
-"""
+
 
 class MathBot(discord.Client):
 	async def on_ready(self):
@@ -114,7 +113,3 @@ class MathBot(discord.Client):
 		if message.content.startswith(".?") or message.content.startswith(".help"):
 			##	sends an info embed back to the user
 			await message.channel.send(embed = embeds.GENERALINFOEMBED)
-
-"""
-
-BOT = commands.Bot(command_prefix = ".")
