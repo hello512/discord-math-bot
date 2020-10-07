@@ -55,7 +55,7 @@ def makestring(contentlist):
 
 
 def analysemathmsg(msg):#
-	"""this function analyses the message sennd by the user and calls the function
+	""""this function analyses the message sennd by the user and calls the function
 	   that extracts the actual values of the message"""
 	classes = []
 	msg = msg.split(" ")
@@ -116,5 +116,26 @@ class MathBot(discord.Client):
 			await message.channel.send(embed = embeds.GENERALINFOEMBED)
 
 """
+from discord.ext import commands
 
-BOT = commands.Bot(command_prefix = ".")
+BOT = commands.Bot(command_prefix = ".", help_command = None)
+BOT.remove_command("help")
+
+@commands.command()
+async def math(ctx, *arg):
+	await ctx.send('hello user :)')
+
+@commands.command()
+async def help(ctx, *arg):
+    await ctx.send("help page: nothing")
+
+async def on_ready():
+    print("math-bot is now online!")
+
+BOT.add_listener(on_ready)
+BOT.add_command(math)
+
+
+if __name__ == "__main__":
+	with open("test_token.dat", "r") as token_file:
+		BOT.run(token_file.read())
