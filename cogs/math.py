@@ -10,7 +10,11 @@ import sys
 ##	my own files
 sys.path.append("../")
 from discord_math_bot.vectormath import vectormath
-from src import embeds
+from messages import {
+	MATHBOT_ERROR_MESSAGE,
+	}
+
+
 
 
 def extractpoint(msg):
@@ -96,7 +100,13 @@ class Math(commands.Cog):
         }
 
     @commands.command()
-    async def math(self):
+    async def math(self, ctx):
+		botmessage = analysemathmsg(message.content)
+		if type(botmessage).__name__ == "str":
+			await ctx.send(botmessage)
+		if type(botmessage).__name__ == "Embed":
+			await ctx.send(embed = botmessage)
+		print(type(botmessage).__name__)
         pass
 
     @commands.command(name = "?")
