@@ -1,4 +1,10 @@
-from discord.ctx import commands
+import sys
+
+from discord.ext import commands
+
+sys.path.append("../")
+from messages import MATHBOTINFOEMBED
+from messages import GENERALINFOEMBED
 
 
 ##  contains anything to help the user
@@ -7,9 +13,14 @@ class Helper(commands.Cog):
         self.bot = bot
 
     @commands.command(name = "?")
-    async def questionmark(self):
-        return
+    async def _questionmark(self, ctx):
+        await self.help(ctx)
 
     @commands.command()
-    async def help(self):
-        return
+    async def help(self, ctx):
+        await ctx.send(embed = GENERALINFOEMBED)
+
+
+
+def setup(bot):
+    bot.add_cog(Helper(bot))
