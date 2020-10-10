@@ -1,0 +1,5 @@
+##  contains all valid guild ids
+VALID_GUILD_IDS = [
+    745295707270807656,
+    679369136010166292
+    ]
