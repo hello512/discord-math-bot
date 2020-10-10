@@ -13,8 +13,10 @@ from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
-class GuildHandler():
+
+class GuildHandler(Thread):
 	def __init__(self, bot):
+		Thread.__init__(self)
 		self.bot = bot
 		self.guilds = bot.guilds
 
@@ -70,13 +72,20 @@ class GuildHandler():
 			self.delete_valid_guild_id(id)
 			yaml.safe_dump(content, guild_file)
 
+	def check_joined_guild(self, guild):
+		if guild.id not in self.load_valid_guild_ids() or guild.id in load_baned_guild_ids():
+			guild.leave()
+
 
 	def run(self):
+		##	loops through the guilds the bot is in and leaves the guilds that are not in the valid guild list
 		while True:
 			for guild in self.guilds:
 				if guild.id not in self.load_valid_guild_ids() or guild.id in load_baned_guild_ids():
 					guild.leave()
 			time.sleep(0.5)
+
+GH = GuildHandler(BOT)
 
 
 async def on_connect():
@@ -93,13 +102,10 @@ async def on_command(ctx):
 	#	await ctx.guild.leave()
 
 async def on_guild_join(guild):
-	pass
+	GH.check_joined_guild(guild)
 
 async def on_command_error(ctx, error):
 	await ctx.send(COMMAND_NOT_AVAILABLE_MESSAGE)
-
-def leave_guild(guild):
-	guild.leave()
 
 @commands.command()
 async def ping(ctx):
@@ -108,11 +114,13 @@ async def ping(ctx):
 BOT.add_listener(on_connect)
 BOT.add_listener(on_ready)
 BOT.add_listener(on_command_error)
+BOT.add_listener(on_guild_join)
 BOT.add_listener(on_command)
 BOT.add_command(ping)
 BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
 if __name__ == "__main__":
+	#GH.start()
 	with open("test_token.dat", "r") as token_file:
 		BOT.run(token_file.read())
