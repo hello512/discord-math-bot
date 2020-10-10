@@ -65,7 +65,7 @@ def analysemathmsg(msg):#
     for index, m in enumerate(msg):
         if index % 2 == 0:
             if msg[index] not in EQUATION_HEADERS:
-                return '❌Run ``.math info`` or ``.math help`` to learn everything about the math bot' ## stored in messages/text_messages.py
+                return MATHBOT_ERROR_MESSAGE ## stored in messages/text_messages.py
             try:
                 classes.append(EQUATION_HEADERS[msg[index]](msg[index + 1]))
             except IndexError:
