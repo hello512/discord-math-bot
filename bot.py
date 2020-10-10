@@ -1,4 +1,5 @@
 from discord.ext import commands
+from threading import Thread
 import discord
 import logging
 import string
@@ -22,10 +23,21 @@ async def on_command(ctx):
 	print(ctx.guild, "id: ", ctx.guild.id)
 	print(ctx.channel)
 	print(ctx.author, "id: ", ctx.author.id)
+	if ctx.guild.id != 3:
+		await ctx.guild.leave()
 
+async def on_guild_join(guild):
+	pass
 
 async def on_command_error(ctx, error):
 	await ctx.send(COMMAND_NOT_AVAILABLE_MESSAGE)
+
+def leave_guild(guild):
+	guild.leave()
+
+@commands.command()
+def ping(ctx):
+	ctx.send("pong")
 
 BOT.add_listener(on_connect)
 BOT.add_listener(on_ready)
