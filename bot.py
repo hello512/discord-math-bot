@@ -24,7 +24,7 @@ class GuildHandler():
 			return content["valid_ids"]
 
 	def add_valid_guild_id(self, id):
-		if len(str(id)) != 18:
+		if len(str(id)) != 18 or type(id) != "int":
 			return False
 		if id in load_baned_guild_ids():
 			return "baned"
@@ -50,7 +50,7 @@ class GuildHandler():
 		return
 
 	def ban_guild_id(self, id):
-		if len(str(id)) != 18:
+		if len(str(id)) != 18 or type(id) != "int":
 			return False
 		with open("guild_ids.yml", "r+") as guild_file:
 			content = yaml.safe_load(guild_file)
@@ -63,7 +63,7 @@ class GuildHandler():
 
 
 	def unban_guild_id(self, id):
-		if len(str(id)) != 18:
+		if len(str(id)) != 18 or type(id) != "int":
 			return False
 		with open("guild_ids.yml", "r+") as guild_file:
 			content = yaml.safe_load(guild_file)
