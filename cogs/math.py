@@ -85,6 +85,9 @@ def analysemathmsg(msg):#
 
     return make_result_embed(returncontent)
 
+def check_channel(ctx):
+    return ctx.channel.name == "bot-commands"
+
 class Math(commands.Cog):
 
     def __init__(self, bot):
@@ -97,6 +100,7 @@ class Math(commands.Cog):
         }
 
     @commands.command()
+    @commands.check(check_channel)
     async def math(self, ctx, *args):
         botmessage = analysemathmsg(args)
         if type(botmessage).__name__ == "str":
