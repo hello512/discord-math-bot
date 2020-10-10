@@ -9,7 +9,7 @@ import sys
 ##	my own files
 sys.path.append("../")
 from discord_math_bot.vectormath import vectormath
-from messages import MATHBOT_ERROR_MESSAGE
+from messages import MATHBOT_ERROR_MESSAGE, make_result_embed
 
 
 
@@ -61,9 +61,9 @@ def analysemathmsg(msg):#
     """this function analyses the message sennd by the user and calls the function
        that extracts the actual values of the message"""
     classes = []
-    msg = msg.split(" ")
+    #msg = msg.split(" ")
     for index, m in enumerate(msg):
-        if index % 2 != 0:
+        if index % 2 == 0:
             if msg[index] not in EQUATION_HEADERS:
                 return '❌Run ``.math info`` or ``.math help`` to learn everything about the math bot' ## stored in messages/text_messages.py
             try:
@@ -83,7 +83,7 @@ def analysemathmsg(msg):#
                     else:
                         returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
 
-    return embeds.make_result_embed(returncontent)
+    return make_result_embed(returncontent)
 
 class Math(commands.Cog):
 
@@ -97,18 +97,13 @@ class Math(commands.Cog):
         }
 
     @commands.command()
-    async def math(self, ctx):
-        botmessage = analysemathmsg(message.content)
+    async def math(self, ctx, *args):
+        botmessage = analysemathmsg(args)
         if type(botmessage).__name__ == "str":
             await ctx.send(botmessage)
         if type(botmessage).__name__ == "Embed":
             await ctx.send(embed = botmessage)
         print(type(botmessage).__name__)
-        pass
-
-    #@commands.command(name = "?")
-    #async def _questionmark(self):
-    #    pass
 
 
 def setup(bot):
