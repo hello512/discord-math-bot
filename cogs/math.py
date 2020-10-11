@@ -57,7 +57,64 @@ def makestring(contentlist):
         returnmessage = returnmessage + str(elem) + " "
     return returnmessage
 
+
+class calculations:
+    def __init__(self):
+        self.classes = classes
+        self.returncontent = returncontent
+
+    def line_calculation(self, line):
+        for cl2 in classes:
+            if type(cl2).__name__ == "Point":
+                if cl2.check_point(cl2):
+                    self.returncontent.appen(f"{str(p)} `liegt auf` {str(cl)}\n")
+                else:
+                    self.returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+
+    def plane_calculation(self, plane):
+        for cl2 in classes:
+            if type(cl2).__name__ == "Point":
+                if plane.checkpoint(cl2):
+                    self.returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
+                else:
+                    self.returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+            if type(cl2).__name__ == "LinearEquation":
+                if plane.check_line(cl2)[0] == "equal":
+                    pass
+                if plane.check_line(cl2)[1] == "parallel":
+                    pass
+                if plane.check_line(cl2)[2] == "point":
+                    pass
+
+    def do_calculations(self):
+        for cl in classes:
+            if type(cl).__name__ == "LinearEquation":
+                self.line_calculation()
+            elif type(cl).__name__ == "PlaneEquation":
+                self.plane_calculation
+
+
 def do_calculations(classes):
+    returncontent = []
+    for cl in classes:
+        if type(cl).__name__ == "PlaneEquation":
+            for p in classes:
+                if type(p).__name__ == "Point":
+                    if cl.checkpoint(p):
+                        returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
+                    else:
+                        returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+                if type(p).__name__ == "LinearEquation":
+                    if cl.check_line(p)
+        if type(cl).__name__ == "LinearEquation":
+            for cl2 in classes:
+                if type(cl2).__name__ == "Point":
+                    if cl2.check_point(cl2):
+                        returncontent.appen(f"{str(p)} `liegt auf` {str(cl)}\n")
+                    else:
+                        returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+
+    return make_result_embed(returncontent)
 
 def analysemathmsg(msg):#
     """this function analyses the message sennd by the user and calls the function
@@ -76,14 +133,6 @@ def analysemathmsg(msg):#
 
     ##	now comes the code that starts the calculations
     returncontent = []
-    for cl in classes:
-        if type(cl).__name__ == "LinearEquation" or type(cl).__name__ == "PlaneEquation":
-            for p in classes:
-                if type(p).__name__ == "Point":
-                    if cl.checkpoint(p):
-                        returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
-                    else:
-                        returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
 
     return make_result_embed(returncontent)
 
