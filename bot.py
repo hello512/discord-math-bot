@@ -26,7 +26,7 @@ class GuildHandler(commands.Cog):
 		#works
 		with open("guild_ids.yml", "r") as guild_file:
 			content = yaml.safe_load(guild_file)
-			return content["valid_ids"]
+			return content["valid_ids"] if content["valid_ids"] != None else []
 
 	def add_valid_guild_id(self, id):
 		##	works!
@@ -58,7 +58,7 @@ class GuildHandler(commands.Cog):
 		#works
 		with open("guild_ids.yml", "r") as guild_file:
 			content = yaml.safe_load(guild_file)
-			return content["baned_ids"]
+			return content["baned_ids"] if content["baned_ids"] != None else []
 		return
 
 	def ban_guild_id(self, id):
@@ -95,7 +95,7 @@ class GuildHandler(commands.Cog):
 		##	loops through the guilds the bot is in and leaves the guilds that are not in the valid guild list
 		for guild in self.bot.guilds:
 			print(guild.id, "valid: ", self.load_valid_guild_ids(), " baned:", self.load_baned_guild_ids())
-			if guild.id not in self.load_valid_guild_ids() or guild.id in load_baned_guild_ids():
+			if guild.id not in self.load_valid_guild_ids() or guild.id in self.load_baned_guild_ids():
 				print("leaving guild with id: ", guild.id)
 				await guild.leave()
 
