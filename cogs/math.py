@@ -9,7 +9,7 @@ import sys
 ##	my own files
 sys.path.append("../")
 from discord_math_bot.vectormath import vectormath
-from messages import MATHBOT_ERROR_MESSAGE, make_result_embed
+from messages import MATHBOT_ERROR_MESSAGE, MATHBOTINFOEMBED, make_result_embed
 
 
 
@@ -46,6 +46,7 @@ EQUATION_HEADERS= {
     "G:" : extractline,
     "P:" : extractpoint,
     "E:" : extractplane,
+    "help" : lambda : MATHBOTINFOEMBED
 }
 
 def makestring(contentlist):
@@ -56,6 +57,7 @@ def makestring(contentlist):
         returnmessage = returnmessage + str(elem) + " "
     return returnmessage
 
+def do_calculations(classes):
 
 def analysemathmsg(msg):#
     """this function analyses the message sennd by the user and calls the function
