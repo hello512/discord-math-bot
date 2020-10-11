@@ -94,7 +94,6 @@ class GuildHandler(commands.Cog):
 	async def run(self):
 		##	loops through the guilds the bot is in and leaves the guilds that are not in the valid guild list
 		for guild in self.bot.guilds:
-			print(guild.id, "valid: ", self.load_valid_guild_ids(), " baned:", self.load_baned_guild_ids())
 			if guild.id not in self.load_valid_guild_ids() or guild.id in self.load_baned_guild_ids():
 				print("leaving guild with id: ", guild.id)
 				await guild.leave()
