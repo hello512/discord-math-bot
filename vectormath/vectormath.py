@@ -149,10 +149,10 @@ class LinearEquation():
 
 	def __repr__(self):
 		return self.__str__()
-		
+
 
 class PlaneEquation():
-	
+
 	def __init__(self, a : Vector, m : Vector = False, v : Vector = False, normvector = False):
 		if not m and not v:
 			pass
@@ -175,7 +175,7 @@ class PlaneEquation():
 		return value_list
 
 	def calcfactors(self, point):
-		##	this calculates the initial values of the factors 
+		##	this calculates the initial values of the factors
 		##	checking if these values fit in the other equations will happen on a later point
 
 		##	needs to be finished!
@@ -195,9 +195,9 @@ class PlaneEquation():
 
 			else:
 				pass
-				
 
-			#if factor[2] != 
+
+			#if factor[2] !=
 
 
 			if m_value < 0:
@@ -227,9 +227,9 @@ class PlaneEquation():
 		for self_co, point_co, n_co in zip(self.a, point, n):
 			result += n_co * (self_co * -1) + n_co * point_co
 		return abs(result)
-		
 
-	def check_point(self, point): 
+
+	def check_point(self, point):
 		distance = self.plane_point_distance(point)
 		return distance if distance != 0 else True
 
@@ -259,7 +259,7 @@ class PlaneEquation():
 			distance = self.plane_point_distance(line.a)
 			return ("equal", 0) if distance == 0 else ("parallel", distance)
 		else:
-			return line.calc_point(self.intercept_point_factor(line))
+			return ("point", line.calc_point(self.intercept_point_factor(line)))
 
 	##	build in operations
 
@@ -271,4 +271,3 @@ class PlaneEquation():
 
 	def __repr__(self):
 		return self.__str__()
-
