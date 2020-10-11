@@ -121,12 +121,6 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
 	await ctx.send("pong")
 
-class Test(commands.Cog):
-	def __init__(self):
-		self.i = 0
-
-
-
 BOT.add_listener(on_connect)
 BOT.add_listener(on_ready)
 BOT.add_listener(on_command_error)
