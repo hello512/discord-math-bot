@@ -15,6 +15,7 @@ from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
 
+
 class GuildHandler(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -120,12 +121,6 @@ async def on_command_error(ctx, error):
 @commands.command()
 async def ping(ctx):
 	await ctx.send("pong")
-
-class Test(commands.Cog):
-	def __init__(self):
-		self.i = 0
-
-
 
 BOT.add_listener(on_connect)
 BOT.add_listener(on_ready)
