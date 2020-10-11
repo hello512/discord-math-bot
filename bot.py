@@ -1,8 +1,9 @@
 from discord.ext import commands
-from threading import Thread
+from discord.ext import tasks
 #import discord
 #import logging
 #import string
+import asyncio
 import yaml
 import time
 import sys
@@ -14,11 +15,11 @@ from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
 
-class GuildHandler(Thread):
+class GuildHandler(commands.Cog):
 	def __init__(self, bot):
-		Thread.__init__(self)
 		self.bot = bot
-		self.guilds = bot.guilds
+		print("init")
+		self.run.start()
 
 	def load_valid_guild_ids(self):
 		#works
@@ -88,15 +89,15 @@ class GuildHandler(Thread):
 			yaml.safe_dump(content, guild_file)
 
 
-	def run(self):
+	@tasks.loop(seconds = 0.5, count = None)
+	async def run(self):
 		##	loops through the guilds the bot is in and leaves the guilds that are not in the valid guild list
-		while True:
-			for guild in self.guilds:
-				if guild.id not in self.load_valid_guild_ids() or guild.id in load_baned_guild_ids():
-					guild.leave()
-			time.sleep(0.5)
+		for guild in self.bot.guilds:
+			print(guild.id, "valid: ", self.load_valid_guild_ids(), " baned:", self.load_baned_guild_ids())
+			if guild.id not in self.load_valid_guild_ids() or guild.id in load_baned_guild_ids():
+				print("leaving guild with id: ", guild.id)
+				await guild.leave()
 
-GH = GuildHandler(BOT)
 
 
 async def on_connect():
@@ -109,8 +110,6 @@ async def on_command(ctx):
 	print(ctx.guild, "id: ", ctx.guild.id)
 	print(ctx.channel)
 	print(ctx.author, "id: ", ctx.author.id)
-	#if ctx.guild.id != 3:
-	#	await ctx.guild.leave()
 
 async def on_guild_join(guild):
 	GH.check_joined_guild(guild)
@@ -122,16 +121,22 @@ async def on_command_error(ctx, error):
 async def ping(ctx):
 	await ctx.send("pong")
 
+class Test(commands.Cog):
+	def __init__(self):
+		self.i = 0
+
+
+
 BOT.add_listener(on_connect)
 BOT.add_listener(on_ready)
 BOT.add_listener(on_command_error)
 BOT.add_listener(on_guild_join)
 BOT.add_listener(on_command)
 BOT.add_command(ping)
+BOT.add_cog(GuildHandler(BOT))
 BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
 if __name__ == "__main__":
-	#GH.start()
 	with open("test_token.dat", "r") as token_file:
 		BOT.run(token_file.read())
