@@ -18,7 +18,6 @@ def extractpoint(msg):
     """This function extracts a point from a givven message in the format: (x, y, z)
        it checks everything to make sure, that the message is valid."""
     msg = msg.replace("(", "").replace(")", "").replace(" ", "").split(",")
-    print(msg)
     msg = list(map(float, msg))
     for p in msg:
         ##	maybe change this in the future so that it also takes vars not just ints
@@ -112,8 +111,9 @@ class Calculations:
 def analysemathmsg(msg):#
     """this function analyses the message sennd by the user and calls the function
        that extracts the actual values of the message"""
+    if msg[0] == "help" or msg[0] == "info":
+        return MATHBOTINFOEMBED
     classes = []
-    #msg = msg.split(" ")
     for index, m in enumerate(msg):
         if index % 2 == 0:
             if msg[index] not in EQUATION_HEADERS:
@@ -150,12 +150,7 @@ class Math(commands.Cog):
             await ctx.send(botmessage)
         if type(botmessage).__name__ == "Embed":
             await ctx.send(embed = botmessage)
-        print(type(botmessage).__name__)
 
-    @commands.command(naem = "math help")
-    @commands.check(check_channel)
-    async def math_help(self, ctx):
-        await ctx.send("help page")
 
 
 def setup(bot):
