@@ -58,63 +58,43 @@ def makestring(contentlist):
     return returnmessage
 
 
-class calculations:
-    def __init__(self):
+class Calculations:
+    def __init__(self, classes):
         self.classes = classes
-        self.returncontent = returncontent
+        self.returncontent = []
 
     def line_calculation(self, line):
-        for cl2 in classes:
+        for cl2 in self.classes:
             if type(cl2).__name__ == "Point":
-                if cl2.check_point(cl2):
-                    self.returncontent.appen(f"{str(p)} `liegt auf` {str(cl)}\n")
+                if line.check_point(cl2):
+                    self.returncontent.append(f"{str(cl2)} `liegt auf` {str(line)}\n")
                 else:
-                    self.returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+                    self.returncontent.append(f"{str(cl2)} `liegt nicht auf` {str(line)}\n")
 
     def plane_calculation(self, plane):
-        for cl2 in classes:
+        for cl2 in self.classes:
             if type(cl2).__name__ == "Point":
                 if plane.checkpoint(cl2):
-                    self.returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
+                    self.returncontent.append(f"{str(cl2)} `liegt auf` {str(plane)}\n")
                 else:
-                    self.returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
+                    self.returncontent.append(f"{str(cl2)} `liegt nicht auf` {str(plane)}\n")
             if type(cl2).__name__ == "LinearEquation":
                 if plane.check_line(cl2)[0] == "equal":
-                    pass
-                if plane.check_line(cl2)[1] == "parallel":
-                    pass
-                if plane.check_line(cl2)[2] == "point":
-                    pass
+                    self.returncontent.append(f"{str(cl2)} `liegt auf` {str(plane)}\n")
+                if plane.check_line(cl2)[0] == "parallel":
+                    self.returncontent.append(f"{str(cl2)} `ist mit einem Abstand von` {str(plane.check_line(cl2)[1])} `LE parallel zu` {str(plane)}\n")
+                if plane.check_line(cl2)[0] == "point":
+                    self.returncontent.append(f"{str(cl2)} `schneidet` {str(plane)} `in` {str(plane.check_line(cl2)[1])}\n")
 
     def do_calculations(self):
-        for cl in classes:
+        for cl in self.classes:
             if type(cl).__name__ == "LinearEquation":
-                self.line_calculation()
+                self.line_calculation(cl)
             elif type(cl).__name__ == "PlaneEquation":
-                self.plane_calculation
+                self.plane_calculation(cl)
 
+        return make_result_embed(self.returncontent)
 
-def do_calculations(classes):
-    returncontent = []
-    for cl in classes:
-        if type(cl).__name__ == "PlaneEquation":
-            for p in classes:
-                if type(p).__name__ == "Point":
-                    if cl.checkpoint(p):
-                        returncontent.append(f"{str(p)} `liegt auf` {str(cl)}\n")
-                    else:
-                        returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
-                if type(p).__name__ == "LinearEquation":
-                    if cl.check_line(p)
-        if type(cl).__name__ == "LinearEquation":
-            for cl2 in classes:
-                if type(cl2).__name__ == "Point":
-                    if cl2.check_point(cl2):
-                        returncontent.appen(f"{str(p)} `liegt auf` {str(cl)}\n")
-                    else:
-                        returncontent.append(f"{str(p)} `liegt nicht auf` {str(cl)}\n")
-
-    return make_result_embed(returncontent)
 
 def analysemathmsg(msg):#
     """this function analyses the message sennd by the user and calls the function
@@ -132,9 +112,8 @@ def analysemathmsg(msg):#
 
 
     ##	now comes the code that starts the calculations
-    returncontent = []
-
-    return make_result_embed(returncontent)
+    calc = Calculations(classes)
+    return calc.do_calculations()
 
 def check_channel(ctx):
     return ctx.channel.name == "bot-commands"
