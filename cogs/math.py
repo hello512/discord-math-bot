@@ -9,7 +9,7 @@ import sys
 ##	my own files
 sys.path.append("../")
 from discord_math_bot.vectormath import vectormath
-from messages import MATHBOT_ERROR_MESSAGE, MATHBOTINFOEMBED, make_result_embed
+from discord_math_bot.messages import MATHBOT_ERROR_MESSAGE, MATHBOTINFOEMBED, make_result_embed
 
 
 
@@ -18,6 +18,7 @@ def extractpoint(msg):
     """This function extracts a point from a givven message in the format: (x, y, z)
        it checks everything to make sure, that the message is valid."""
     msg = msg.replace("(", "").replace(")", "").replace(" ", "").split(",")
+    print(msg)
     msg = list(map(float, msg))
     for p in msg:
         ##	maybe change this in the future so that it also takes vars not just ints
@@ -37,9 +38,21 @@ def extractline(msg):
     return vectormath.LinearEquation(avector, mvector)
 
 
-def extractplane():
-    if msg.translate({ord(c): None for c in "1234567890,. -*"}) != "x=()+r()+s()":
-        return
+def extractplane(msg):
+    translated = msg.translate({ord(c): None for c in "1234567890,. *"}).translate({ord(c): "f" for c in "rstk"}).replace("-", "+")
+    forms = ["x=()+f()+f()", "xyz=", "[x-()]*()="]
+    if translated == forms[0]:
+        translated = msg.translate({ord(c): None for c in "x=()frtsk*"}).translate({ord(c): "," for c in "+-"}).split(",")
+        translated = list(map(float, translated))
+        avector = vectormath.Vector(vectorlist = translated[0 : 3])
+        mvector = vectormath.Vector(vectorlist = translated[3 : 6])
+        vvector = vectormath.Vector(vectorlist = translated[6 : 9])
+        return vectormath.PlaneEquation(avector, mvector, vvector)
+    elif translated == forms[1]:
+        pass
+    elif translated == forms[2]:
+        pass
+    return "invalid format"
 
 ##	contains all the headers for the diffrent equations and the funciton names that need to be called.
 EQUATION_HEADERS= {
@@ -74,7 +87,7 @@ class Calculations:
     def plane_calculation(self, plane):
         for cl2 in self.classes:
             if type(cl2).__name__ == "Point":
-                if plane.checkpoint(cl2):
+                if plane.check_point(cl2):
                     self.returncontent.append(f"{str(cl2)} `liegt auf` {str(plane)}\n")
                 else:
                     self.returncontent.append(f"{str(cl2)} `liegt nicht auf` {str(plane)}\n")
@@ -138,6 +151,11 @@ class Math(commands.Cog):
         if type(botmessage).__name__ == "Embed":
             await ctx.send(embed = botmessage)
         print(type(botmessage).__name__)
+
+    @commands.command(naem = "math help")
+    @commands.check(check_channel)
+    async def math_help(self, ctx):
+        await ctx.send("help page")
 
 
 def setup(bot):
