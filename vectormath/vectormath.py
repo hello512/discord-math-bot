@@ -12,7 +12,7 @@ import math
 def skalar(vector0, vector1):
 	x = vector0.x * vector1.x
 	y = vector0.y * vector1.y
-	z = vector0.z * vector1.y
+	z = vector0.z * vector1.z
 	return x + y + z
 
 
