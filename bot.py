@@ -19,7 +19,6 @@ BOT = commands.Bot(command_prefix = ".", help_command = None)
 class GuildHandler(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		print("init")
 		self.run.start()
 
 	def load_valid_guild_ids(self):
@@ -107,9 +106,7 @@ async def on_ready():
     print("math-bot is now online!")
 
 async def on_command(ctx):
-	print(ctx.guild, "id: ", ctx.guild.id)
-	print(ctx.channel)
-	print(ctx.author, "id: ", ctx.author.id)
+	pass
 
 async def on_guild_join(guild):
 	GH.check_joined_guild(guild)
