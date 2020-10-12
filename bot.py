@@ -132,5 +132,5 @@ BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
 if __name__ == "__main__":
-	with open("test_token.dat", "r") as token_file:
+	with open("token.dat", "r") as token_file:
 		BOT.run(token_file.read())
