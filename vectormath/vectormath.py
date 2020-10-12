@@ -12,7 +12,7 @@ import math
 def skalar(vector0, vector1):
 	x = vector0.x * vector1.x
 	y = vector0.y * vector1.y
-	z = vector0.z * vector1.y
+	z = vector0.z * vector1.z
 	return x + y + z
 
 
@@ -132,7 +132,7 @@ class LinearEquation():
 
 	##	returns True if Point is on the Line, False if not
 	##	uses the calcfactor method, to do this
-	def checkpoint(self, point):
+	def check_point(self, point):
 		return self.calcfactor(point)
 
 	def calc_point(self, factor):
@@ -149,10 +149,10 @@ class LinearEquation():
 
 	def __repr__(self):
 		return self.__str__()
-		
+
 
 class PlaneEquation():
-	
+
 	def __init__(self, a : Vector, m : Vector = False, v : Vector = False, normvector = False):
 		if not m and not v:
 			pass
@@ -175,7 +175,7 @@ class PlaneEquation():
 		return value_list
 
 	def calcfactors(self, point):
-		##	this calculates the initial values of the factors 
+		##	this calculates the initial values of the factors
 		##	checking if these values fit in the other equations will happen on a later point
 
 		##	needs to be finished!
@@ -195,9 +195,9 @@ class PlaneEquation():
 
 			else:
 				pass
-				
 
-			#if factor[2] != 
+
+			#if factor[2] !=
 
 
 			if m_value < 0:
@@ -212,7 +212,7 @@ class PlaneEquation():
 		point_side_result = 0
 		supposed_result = 0
 
-		for n_cooradinate, point_cooradinate, a_coordinate in zip(self.normvectorm, point, self.a):
+		for n_coordinate, point_cooradinate, a_coordinate in zip(self.normvector, point, self.a):
 			point_side_result += n_coordinate * point_cooradinate
 			supposed_result += n_coordinate * a_coordinate * -1
 		return point_side_result == supposed_result * -1
@@ -227,9 +227,9 @@ class PlaneEquation():
 		for self_co, point_co, n_co in zip(self.a, point, n):
 			result += n_co * (self_co * -1) + n_co * point_co
 		return abs(result)
-		
 
-	def check_point(self, point): 
+
+	def check_point(self, point):
 		distance = self.plane_point_distance(point)
 		return distance if distance != 0 else True
 
@@ -249,6 +249,7 @@ class PlaneEquation():
 			number += co_form_val * a_co
 		return (self.coo_form_values[3] - number) / dividing_factor
 
+	##	not doing anything right now, might be used in later time. Needs to be finished
 	def get_intercept_point(self, line):
 		factor = self.intercept_point_factor(line)
 		pass
@@ -258,7 +259,7 @@ class PlaneEquation():
 			distance = self.plane_point_distance(line.a)
 			return ("equal", 0) if distance == 0 else ("parallel", distance)
 		else:
-			return line.calc_point(self.intercept_point_factor(line))
+			return ("point", line.calc_point(self.intercept_point_factor(line)))
 
 	##	build in operations
 
@@ -266,8 +267,7 @@ class PlaneEquation():
 		return iter([self.a, self.m, self.v])
 
 	def __str__(self):
-		return f"G: x = {str(self.a)} + {str(self.rfactor)} * {str(self.m)} + {str(self.sfactor)} * {str(self.v)}"
+		return f"E: x = {str(self.a)} + {str(self.rfactor)} * {str(self.m)} + {str(self.sfactor)} * {str(self.v)}"
 
 	def __repr__(self):
 		return self.__str__()
-
