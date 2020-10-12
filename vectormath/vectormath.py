@@ -132,7 +132,7 @@ class LinearEquation():
 
 	##	returns True if Point is on the Line, False if not
 	##	uses the calcfactor method, to do this
-	def checkpoint(self, point):
+	def check_point(self, point):
 		return self.calcfactor(point)
 
 	def calc_point(self, factor):
