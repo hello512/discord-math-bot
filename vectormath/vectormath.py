@@ -267,7 +267,7 @@ class PlaneEquation():
 		return iter([self.a, self.m, self.v])
 
 	def __str__(self):
-		return f"G: x = {str(self.a)} + {str(self.rfactor)} * {str(self.m)} + {str(self.sfactor)} * {str(self.v)}"
+		return f"E: x = {str(self.a)} + {str(self.rfactor)} * {str(self.m)} + {str(self.sfactor)} * {str(self.v)}"
 
 	def __repr__(self):
 		return self.__str__()
