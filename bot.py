@@ -124,7 +124,7 @@ BOT.add_listener(on_command_error)
 BOT.add_listener(on_guild_join)
 BOT.add_listener(on_command)
 BOT.add_command(ping)
-BOT.add_cog(GuildHandler(BOT))
+BOT.load_extension("cogs.guilds")
 BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
