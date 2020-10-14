@@ -25,8 +25,11 @@ class GuildHandler(commands.Cog):
 			return "baned"
 		with open("guild_ids.yml", "r") as guild_file:
 			content = yaml.safe_load(guild_file)
-		with open("guild_ids.yml", "w") as guild_file:
+		if content["valid_ids"] != None and id not in content["valid_ids"]:
 			content["valid_ids"].append(id)
+		elif id not in content["valid_ids"]:
+			content["valid_ids"] = [id]
+		with open("guild_ids.yml", "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
 		return True
 
@@ -38,10 +41,11 @@ class GuildHandler(commands.Cog):
 			content = yaml.safe_load(guild_file)
 			try:
 				content["valid_ids"].remove(id)
-			except Exception as e:
+			except:
 				return
 		with open("guild_ids.yml", "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
+		return True
 
 	def load_baned_guild_ids(self):
 		#works
@@ -60,9 +64,13 @@ class GuildHandler(commands.Cog):
 				content["valid_ids"].remove(id)
 			except:
 				pass
-			content["baned_ids"].append(id)
+			if content["baned_ids"] != None and id not in content["baned_ids"]:
+				content["baned_ids"].append(id)
+			else:
+				content["baned_ids"] = [id]
 		with open("guild_ids.yml", "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
+		return True
 
 
 	def unban_guild_id(self, id):
@@ -74,9 +82,13 @@ class GuildHandler(commands.Cog):
 			try:
 				content["baned_ids"].remove(id)
 			except:
-				return
+				return True
 		with open("guild_ids.yml", "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
+		return True
+
+	def get_bot_guilds(self):
+		return self.bot.guilds
 
 
 	@tasks.loop(seconds = 0.5, count = None)
@@ -100,7 +112,10 @@ class GuildHandler(commands.Cog):
 	async def _ban_guild(self, ctx, *args):
 		returncontent = []
 		for id in args:
-			res = self.ban_guild_id(id)
+			try:
+				res = self.ban_guild_id(int(id))
+			except:
+				res = False
 			returncontent.append(f"{id}: invalid format" if not res else f"{id}: baned")
 		await ctx.send(self.make_str(returncontent))
 
@@ -110,7 +125,10 @@ class GuildHandler(commands.Cog):
 	async def _unban_guild(self, ctx, *args):
 		returncontent = []
 		for id in args:
-			res = self.unban_guild_id(id)
+			try:
+				res = self.unban_guild_id(int(id))
+			except:
+				res = False
 			returncontent.append(f"{id}: invalid format" if not res else f"{id}: unbaned")
 		await ctx.send(self.make_str(returncontent))
 
@@ -118,29 +136,33 @@ class GuildHandler(commands.Cog):
 	@commands.is_owner()
 	@commands.check(channel_type)
 	async def _add_guild(self, ctx, *args):
-		async def _unban_guild(self, ctx, *args):
-			returncontent = []
-			for id in args:
-				res = self.add_valid_guild_id(id)
-				returncontent.append(f"{id}: invalid format" if not res else f"{id}: added to valid guild ids")
-			await ctx.send(self.make_str(returncontent))
+		returncontent = []
+		for id in args:
+			try:
+				res = self.add_valid_guild_id(int(id))
+			except:
+				res = False
+			returncontent.append(f"{id}: invalid format" if not res else f"{id}: added to valid guild ids")
+		await ctx.send(self.make_str(returncontent))
 
-	@commands.command(name = "add-guild")
+	@commands.command(name = "remove-guild")
 	@commands.is_owner()
 	@commands.check(channel_type)
 	async def _remove_guild(self, ctx, *args):
-		async def _unban_guild(self, ctx, *args):
-			returncontent = []
-			for id in args:
-				res = self.delete_valid_guild_id(id)
-				returncontent.append(f"{id}: invalid format" if not res else f"{id}: removed from valid guild ids")
-			await ctx.send(self.make_str(returncontent))
+		returncontent = []
+		for id in args:
+			try:
+				res = self.delete_valid_guild_id(int(id))
+			except:
+				res = False
+			returncontent.append(f"{id}: invalid format" if not res else f"{id}: removed from valid guild ids")
+		await ctx.send(self.make_str(returncontent))
 
 	@commands.command(name = "guild-status")
 	@commands.is_owner()
 	@commands.check(channel_type)
 	async def _guild_status(self, ctx, *args):
-		pass
+		await ctx.send(self.make_str(["bot is currently in guilds:"] + [str(i) for i in self.get_bot_guilds()] + ["valid guild ids:"] + [str(i) for i in self.load_valid_guild_ids()] + ["baned guild ids:"] + [str(i) for i in self.load_baned_guild_ids()]))
 
 
 def setup(bot):
