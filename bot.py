@@ -1,5 +1,9 @@
 from discord.ext import commands
 from discord.ext import tasks
+from discord import (
+	Status,
+	Game
+)
 #import discord
 #import logging
 #import string
@@ -19,7 +23,7 @@ async def on_connect():
 	print("connected")
 
 async def on_ready():
-    print("math-bot is now online!")
+	print("math-bot is now online!")
 	await BOT.change_presence(status = Status.online, activity = Game("Vector math developed by: 0x5F_#3292 github.com/hello512/discord-math-bot"))
 
 
