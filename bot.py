@@ -18,13 +18,16 @@ from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
+BOT_GAME = Game("Vector math developed by: 0x5F_#3292 github.com/hello512/discord-math-bot")
+BOT_STATUS = Status.online
+
 
 async def on_connect():
 	print("connected")
 
 async def on_ready():
 	print("math-bot is now online!")
-	await BOT.change_presence(status = Status.online, activity = Game("Vector math developed by: 0x5F_#3292 github.com/hello512/discord-math-bot"))
+	await BOT.change_presence(status = BOT_STATUS, activity = BOT_GAME)
 
 
 async def on_command(ctx):
