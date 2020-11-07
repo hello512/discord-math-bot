@@ -4,7 +4,7 @@ from discord import Embed
 MATHBOTINFOEMBED = Embed(
 	title = "Discord Mathe Bot Information / Hilfe",
 	description = "Hier findest du alle wichtigen Informationen und Befehle um den Mathe Bot benutzen zu können.",
-	url = "",
+	url = "https://github.com/hello512/discord-math-bot",
 	colour = 16312092,
 	)
 
@@ -44,6 +44,7 @@ and shows how to access their info / help sites.
 GENERALINFOEMBED = Embed(
 	title = "Generelle Informationen",
 	description = "Eine Auflistung aller commands bzw. bots",
+	url = "https://github.com/hello512/discord-math-bot",
 	color = 16312092
 	)
 
