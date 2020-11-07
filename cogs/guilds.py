@@ -5,6 +5,9 @@ import yaml
 import time
 
 
+GUILDFILE_PATH = "permanent_storage/guild_ids.yml"
+
+
 def channel_type(ctx):
 	return str(ctx.channel.type) == "private"
 
@@ -16,7 +19,7 @@ class GuildHandler(commands.Cog):
 
 	def load_valid_guild_ids(self):
 		#works
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)
 			return content["valid_ids"] if content["valid_ids"] != None else []
 
@@ -26,13 +29,13 @@ class GuildHandler(commands.Cog):
 			return False
 		if id in self.load_baned_guild_ids():
 			return "baned"
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)
 		if content["valid_ids"] != None and id not in content["valid_ids"]:
 			content["valid_ids"].append(id)
 		elif id not in content["valid_ids"]:
 			content["valid_ids"] = [id]
-		with open("guild_ids.yml", "w") as guild_file:
+		with open(GUILDFILE_PATH, "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
 		return True
 
@@ -40,35 +43,35 @@ class GuildHandler(commands.Cog):
 		#works
 		if len(str(id)) != 18 or type(id).__name__ != "int":
 			return False
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)
 			try:
 				content["valid_ids"].remove(id)
 			except:
 				return True
-		with open("guild_ids.yml", "w") as guild_file:
+		with open(GUILDFILE_PATH, "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
 		return True
 
 	def load_baned_guild_ids(self) -> dict:
 		# loads baned guild ids and ban reasons and returns them as a dict
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)
-			return content["baned_ids"] if content["baned_ids"] != None else []
+			return content["baned_ids"] if content["baned_ids"] != None else {}
 		return
 
 	def ban_guild_id(self, id : int, reason : str = False) -> bool:
 		#works
 		if len(str(id)) != 18 or type(id).__name__ != "int":
 			return False
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)
 			self.delete_valid_guild_id(id)
 			if content["baned_ids"] == None:
 				content["baned_ids"] = {}
 			content["baned_ids"][id] = {}
 			content["baned_ids"][id]["reason"] = reason if reason != False else "no reason was mentioned"
-		with open("guild_ids.yml", "w") as guild_file:
+		with open(GUILDFILE_PATH, "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
 		return True
 
@@ -77,13 +80,13 @@ class GuildHandler(commands.Cog):
 		#works
 		if len(str(id)) != 18 or type(id).__name__ != "int":
 			return False
-		with open("guild_ids.yml", "r") as guild_file:
+		with open(GUILDFILE_PATH, "r") as guild_file:
 			content = yaml.safe_load(guild_file)#
 			try:
 				content["baned_ids"].pop(id)
 			except Exception as e:
 				return True
-		with open("guild_ids.yml", "w") as guild_file:
+		with open(GUILDFILE_PATH, "w") as guild_file:
 			yaml.safe_dump(content, guild_file)
 		return True
 
