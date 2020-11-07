@@ -10,4 +10,6 @@ RUN pipenv install
 
 COPY . .
 
+VOLUME /permanent_storage
+
 CMD ["pipenv", "run", "python", "bot.py"]
