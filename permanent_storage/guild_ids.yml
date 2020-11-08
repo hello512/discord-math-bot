@@ -1,5 +1,5 @@
-baned_ids:
-
+baned_ids: null
 valid_ids:
 - 679369136010166292
 - 745295707270807656
+whitelist: true

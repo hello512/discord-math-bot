@@ -16,6 +16,31 @@ class GuildHandler(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.run.start()
+		self.bot.add_check(func=self.guild_check, call_once=False)
+
+	def guild_check(self, ctx):
+		if self.load_whitelist_status() and ctx.guild != None:
+			return ctx.guild.id in self.load_valid_guild_ids()
+		return True
+
+	def load_whitelist_status(self) -> bool:
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		return content["whitelist"]
+
+	def activate_whitelist(self):
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		content["whitelist"] = True
+		with open(GUILDFILE_PATH, "w") as guild_file:
+			yaml.safe_dump(content, guild_file)
+
+	def deactivate_whitelist(self):
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		content["whitelist"] = False
+		with open(GUILDFILE_PATH, "w") as guild_file:
+			yaml.safe_dump(content, guild_file)
 
 	def load_valid_guild_ids(self):
 		#works
@@ -98,7 +123,7 @@ class GuildHandler(commands.Cog):
 	async def run(self):
 		##	loops through the guilds the bot is in and leaves the guilds that are not in the valid guild list
 		for guild in self.bot.guilds:
-			if guild.id not in self.load_valid_guild_ids() or guild.id in self.load_baned_guild_ids():
+			if guild.id in self.load_baned_guild_ids():
 				await guild.leave()
 
 
@@ -182,6 +207,26 @@ class GuildHandler(commands.Cog):
 				res = False
 			returncontent.append(f"{id}: invalid format" if not res else f"{id}: removed from valid guild ids")
 		await ctx.send(self.make_str(returncontent))
+
+	@commands.command(name = "whitelist-status")
+	@commands.is_owner()
+	@commands.check(channel_type)
+	async def _whitel_status(self, ctx):
+		await ctx.send("whitelist status: " + str(self.load_whitelist_status()))
+
+	@commands.command(name = "deactivate-whitelist")
+	@commands.is_owner()
+	@commands.check(channel_type)
+	async def _deac_whitel(self, ctx):
+		self.deactivate_whitelist()
+		await ctx.send("deacitvated whitelist")
+
+	@commands.command(name = "activate-whitelist")
+	@commands.is_owner()
+	@commands.check(channel_type)
+	async def _act_whitel(self, ctx):
+		self.activate_whitelist()
+		await ctx.send("activated whitelist")
 
 	@commands.command(name = "guild-status")
 	@commands.is_owner()
