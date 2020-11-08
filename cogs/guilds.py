@@ -17,6 +17,25 @@ class GuildHandler(commands.Cog):
 		self.bot = bot
 		self.run.start()
 
+	def load_whitelist_status(self) -> bool:
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		return content["whitelist"]
+
+	def activate_whitelist(self):
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		content["whitelist"] = True
+		with open(GUILDFILE_PATH, "w") as guild_file:
+			yaml.safe_dump(content, guild_file)
+
+	def deactivate_whitelist(self):
+		with open(GUILDFILE_PATH, "r") as guild_file:
+			content = yaml.safe_load(guild_file)
+		content["whitelist"] = False
+		with open(GUILDFILE_PATH, "w") as guild_file:
+			yaml.safe_dump(content, guild_file)
+
 	def load_valid_guild_ids(self):
 		#works
 		with open(GUILDFILE_PATH, "r") as guild_file:

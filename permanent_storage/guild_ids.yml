@@ -1,3 +1,6 @@
+whitelist:
+  true
+
 baned_ids:
 
 valid_ids:
