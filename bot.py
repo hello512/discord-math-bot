@@ -55,6 +55,6 @@ if __name__ == "__main__":
 	try:
 		token = os.environ["TOKEN"]
 	except Exception as e:
-		return e
+		print(e)
 	else:
-		BOT.run(token_file.read())
+		BOT.run(token)
