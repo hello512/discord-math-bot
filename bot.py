@@ -12,9 +12,11 @@ import yaml
 import time
 import sys
 
-
 sys.path.append("../")
 from messages import COMMAND_NOT_AVAILABLE_MESSAGE
+
+
+TOKEN_FILE_PATH = "permanent_storage/test_token.dat"
 
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
@@ -54,5 +56,5 @@ BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
 if __name__ == "__main__":
-	with open("token.dat", "r") as token_file:
+	with open(TOKEN_FILE_PATH, "r") as token_file:
 		BOT.run(token_file.read())
