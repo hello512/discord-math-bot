@@ -4,3 +4,4 @@ site-packages
 .dockerignore
 tests*
 README.md
+variables.env
