@@ -16,7 +16,7 @@ sys.path.append("../")
 from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 
 
-TOKEN_FILE_PATH = "permanent_storage/test_token.dat"
+TOKEN_FILE_PATH = "permanent_storage/token.dat"
 
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
