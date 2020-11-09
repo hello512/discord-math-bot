@@ -4,19 +4,15 @@ from discord import (
 	Status,
 	Game
 )
-#import discord
-#import logging
-#import string
 import asyncio
 import yaml
 import time
 import sys
+import os
 
 sys.path.append("../")
 from messages import COMMAND_NOT_AVAILABLE_MESSAGE
 
-
-TOKEN_FILE_PATH = "permanent_storage/token.dat"
 
 BOT = commands.Bot(command_prefix = ".", help_command = None)
 
@@ -56,5 +52,9 @@ BOT.load_extension("cogs.math")
 BOT.load_extension("cogs.help")
 
 if __name__ == "__main__":
-	with open(TOKEN_FILE_PATH, "r") as token_file:
+	try:
+		token = os.environ["TOKEN"]
+	except Exception as e:
+		return e
+	else:
 		BOT.run(token_file.read())
