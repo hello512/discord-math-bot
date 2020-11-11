@@ -16,26 +16,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      
-      - env:
-          TOKEN: ${{ secrets.TOKEN_GH }}
-          UNAME: ${{ secrets.UNAME }}
-      
-      # logs into gh pkg registry
-      - name: login to gh
-        run: |
-          docker login docker.pkg.github.com -u "$UNAME" -p "$TOKEN"
-        
-      # build docker image
-      - name: build docker image
-        run: docker build . -t dmb-test-image:v1
-      
-      # tag docker image
-      - name: tag docker image
-        run: docker tag discord-math-bot-image docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
-      
-      # push docker image
-      - name: push docker image
-        run: docker push docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - env:
+        TOKEN: ${{ secrets.TOKEN_GH }}
+        UNAME: ${{ secrets.UNAME }}
+
+    # logs into gh pkg registry
+    - name: login to gh
+      run: |
+        docker login docker.pkg.github.com -u "$UNAME" -p "$TOKEN"
+
+    # build docker image
+    - name: build docker image
+      run: docker build . -t dmb-test-image:v1
+
+    # tag docker image
+    - name: tag docker image
+      run: docker tag discord-math-bot-image docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
+
+    # push docker image
+    - name: push docker image
+      run: docker push docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
