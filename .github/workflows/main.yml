@@ -31,14 +31,14 @@ jobs:
       # build docker image
       - name: build docker image
         run: |
-          docker build . -t dmb-test-image:v1
+          docker build . -t discord-math-bot:latest
 
       # tag docker image
       - name: tag docker image
         run: |
-          docker tag dmb-test-image:v1 docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
+          docker tag discord-math-bot:latest docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
 
       # push docker image
       - name: push docker image
         run: |
-          docker push docker.pkg.github.com/hello512/discord-math-bot/dmb-test-image:v1
+          docker push docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
