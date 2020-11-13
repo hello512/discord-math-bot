@@ -42,3 +42,27 @@ jobs:
       - name: push docker image
         run: |
           docker push docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
+          
+      - name: logout from docker
+        run: |
+          docker logout
+          
+      - name: login to docker
+        run: |
+          run docker login -u DOCKER_USER -p DOCKER_TOKEN
+        env:
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          
+      - name: untag docker image
+        run: |
+          docker rmi docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
+          
+      - name: tag docker image
+        run: |
+          docker tag discord-math-bot:latest hello512/discord-math-bot:latest
+          
+      - name: push image
+        run: |
+          docker push hello512/discord-math-bot:latest
+                    
