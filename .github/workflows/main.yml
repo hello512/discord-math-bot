@@ -49,7 +49,7 @@ jobs:
           
       - name: login to docker
         run: |
-          run docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
+          docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
         env:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
