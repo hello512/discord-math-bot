@@ -65,4 +65,4 @@ jobs:
       - name: push image
         run: |
           docker push hello512/discord-math-bot:latest
-                    
+                  
