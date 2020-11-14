@@ -1,6 +1,7 @@
 site-packages
 .gitignore
 .git
+.github
 .dockerignore
 tests*
 README.md
