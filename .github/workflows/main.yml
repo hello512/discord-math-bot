@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ development ]
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -15,17 +15,54 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+        
+      # logs into gh pkg registry
+      - name: login to gh
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          docker login docker.pkg.github.com -u "$UNAME" -p "$TOKEN"
+        env:
+          TOKEN: ${{ secrets.TOKEN_GH }}
+          UNAME: ${{ secrets.UNAME }}
+
+
+      # build docker image
+      - name: build docker image
+        run: |
+          docker build . -t discord-math-bot:latest
+
+      # tag docker image
+      - name: tag docker image
+        run: |
+          docker tag discord-math-bot:latest docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
+
+      # push docker image
+      - name: push docker image
+        run: |
+          docker push docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
+          
+      - name: logout from docker
+        run: |
+          docker logout
+          
+      - name: login to docker
+        run: |
+          docker login -u "$DOCKER_USER" -p "$DOCKER_TOKEN"
+        env:
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          
+      - name: untag docker image
+        run: |
+          docker rmi docker.pkg.github.com/hello512/discord-math-bot/discord-math-bot:latest
+          
+      - name: tag docker image
+        run: |
+          docker tag discord-math-bot:latest hello512/discord-math-bot:latest
+          
+      - name: push image
+        run: |
+          docker push hello512/discord-math-bot:latest
+                  

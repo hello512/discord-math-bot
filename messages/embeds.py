@@ -17,7 +17,7 @@ MATHBOTINFOEMBED.add_field(
 	)
 MATHBOTINFOEMBED.add_field(
 	name = "Punkte:",
-	value =	"Punkte müssen in einem bestimmten Vormat gesendet werden, um von dem Bot als Punkt wahrgenommen zu werden.```P: (x,y,z)```Sollte es sich um einen zwei dimensionalen Punkt handeln, muss für z null eingesetzt werden. Außerdem darf der Name des Punktes (P:) nicht verändert werden.\n",
+	value =	"Punkte müssen in einem bestimmten Format gesendet werden, um von dem Bot als Punkt wahrgenommen zu werden.```P: (x,y,z)```Sollte es sich um einen zwei dimensionalen Punkt handeln, muss für z null eingesetzt werden. Außerdem darf der Name des Punktes (P:) nicht verändert werden.\n",
 	inline = False
 	)
 MATHBOTINFOEMBED.add_field(
